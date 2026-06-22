@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+DOCUMENTO HTML - F1 DEVICE LOGIN (REGISTRAZIONE)
+================================================================================
+Questa pagina consente ai nuovi dispositivi (vetture) di registrarsi presso
+il backend della dashboard. L'utente inserisce un ID dispositivo e, tramite
+chiamata API, lo invia al server per la registrazione.
+La pagina è stilizzata con il tema dark e glassmorphism della dashboard principale.
+
+================================================================================
+INDICE DELLE SEZIONI
+================================================================================
+1.  META E TITOLO ................................. riga  31
+2.  STILI INTERNI (CSS specifici per il login) ... riga  41
+3.  SFONDO ANIMATO ................................ riga 227
+4.  CARD DI REGISTRAZIONE ........................ riga 233
+5.  LOGICA DI REGISTRAZIONE (JavaScript) ......... riga 270
+================================================================================
+-->
+<html lang="it">
+<head>
+    <!-- ============================================================
+    SEZIONE 1: META E TITOLO
+    ============================================================ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 Device Login</title>
+
+    <!-- Foglio di stile principale della dashboard -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- ============================================================
+    SEZIONE 2: STILI INTERNI (CSS specifici per il login)
+    ============================================================ -->
+    <style>
+        /* --- Sfondo e centratura --- */
+        body {
+            font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
+            background: var(--f1-bg);
+            background-image:
+                radial-gradient(circle at 30% 40%, rgba(74, 158, 255, 0.04), transparent 40%),
+                radial-gradient(circle at 70% 60%, rgba(255, 123, 0, 0.03), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(255, 59, 48, 0.02), transparent 50%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--f1-text);
+            overflow: hidden;
+            margin: 0;
+        }
+
+        /* Alone luminoso animato (effetto neon) */
+        .bg-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: var(--f1-blue-glow);
+            filter: blur(150px);
+            border-radius: 50%;
+            top: -250px;
+            left: -250px;
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.5; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* --- Card principale (glassmorphism) --- */
+        .login-card {
+            position: relative;
+            width: 420px;
+            max-width: 94%;
+            padding: 38px 32px 34px 32px;
+            border-radius: var(--f1-radius);
+            background: var(--f1-card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--f1-border);
+            box-shadow: var(--f1-shadow);
+            transition: var(--f1-transition);
+            text-align: center;
+            z-index: 2;
+        }
+
+        /* Bordo animato con gradiente */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border-radius: calc(var(--f1-radius) + 1px);
+            background: linear-gradient(90deg, var(--f1-blue), var(--f1-orange), var(--f1-red));
+            z-index: -1;
+            opacity: 0.3;
+            transition: opacity 0.4s;
+        }
+
+        .login-card:hover::before {
+            opacity: 0.8;
+        }
+
+        .login-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(74, 158, 255, 0.12);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(74, 158, 255, 0.06);
+        }
+
+        /* Titolo (Orbitron con gradiente) */
+        .login-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 22px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0 0 24px 0;
+            background: linear-gradient(135deg, var(--f1-red), var(--f1-orange));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: 0 0 40px var(--f1-red-glow);
+        }
+
+        /* Etichetta */
+        .label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--f1-text-muted);
+            margin-bottom: 6px;
+            text-align: left;
+        }
+
+        /* Campo input */
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--f1-border);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--f1-text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+            transition: var(--f1-transition);
+            margin-bottom: 8px;
+            box-sizing: border-box;
+        }
+
+        .login-input:focus {
+            border-color: var(--f1-blue);
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .login-input::placeholder {
+            color: var(--f1-text-muted);
+            font-weight: 300;
+        }
+
+        /* Pulsanti generici */
+        .login-btn {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--f1-border);
+            background: rgba(30, 30, 36, 0.8);
+            color: var(--f1-text);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: var(--f1-transition);
+            position: relative;
+            overflow: hidden;
+            margin-top: 12px;
+            box-sizing: border-box;
+            box-shadow: var(--f1-shadow);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--f1-blue);
+            box-shadow: 0 8px 32px rgba(74, 158, 255, 0.08);
+            background: rgba(74, 158, 255, 0.04);
+            color: var(--f1-blue);
+        }
+
+        .login-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Pulsante primario (Register) */
+        .login-btn.primary {
+            background: linear-gradient(135deg, var(--f1-red), #ff4d00);
+            border-color: rgba(255, 0, 76, 0.2);
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px var(--f1-red-glow);
+        }
+
+        .login-btn.primary:hover {
+            border-color: var(--f1-red);
+            box-shadow: 0 8px 32px var(--f1-red-glow);
+            background: linear-gradient(135deg, var(--f1-red), #ff4d00);
+            transform: translateY(-2px) scale(1.01);
+            color: white;
+        }
+
+        /* Pulsante secondario (Back) */
+        .login-btn.secondary {
+            background: rgba(30, 30, 36, 0.6);
+            border-color: var(--f1-border);
+            color: var(--f1-text-muted);
+        }
+
+        .login-btn.secondary:hover {
+            border-color: var(--f1-blue);
+            color: var(--f1-text);
+            background: rgba(74, 158, 255, 0.04);
+        }
+
+        /* Effetto ripple */
+        .login-btn::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, rgba(74, 158, 255, 0.04), transparent 60%);
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+
+        .login-btn:active::after {
+            opacity: 1;
+        }
+
+        /* Area feedback */
+        #result {
+            margin-top: 18px;
+            font-size: 14px;
+            font-weight: 500;
+            min-height: 24px;
+            color: var(--f1-text);
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: var(--f1-transition);
+        }
+
+        #result:not(:empty) {
+            border: 1px solid rgba(74, 158, 255, 0.08);
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 28px 20px 24px 20px;
+            }
+            .login-title {
+                font-size: 18px;
+            }
+            .login-input, .login-btn {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+            .bg-glow {
+                width: 400px;
+                height: 400px;
+                top: -100px;
+                left: -100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    SEZIONE 3: SFONDO ANIMATO
+    ============================================================ -->
+    <div class="bg-glow"></div>
+
+    <!-- ============================================================
+    SEZIONE 4: CARD DI REGISTRAZIONE
+    ============================================================ -->
+    <div class="login-card">
+
+        <div class="login-title">🏎 F1 Device Registration</div>
+
+        <div class="label">Insert your device ID</div>
+        <input class="login-input" id="deviceId" placeholder="e.g. car_1 / esp32_01">
+
+        <button class="login-btn primary" onclick="registerDevice()">
+            Register Device
+        </button>
+
+        <button class="login-btn secondary" onclick="goDashboard()">
+            Back to Dashboard
+        </button>
+
+        <div id="result"></div>
+
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 5: LOGICA DI REGISTRAZIONE (JavaScript)
+    ============================================================ -->
+    <script>
+        /**
+         * Invia una richiesta di registrazione al backend.
+         * Legge l'ID dal campo input, lo valida e gestisce la risposta.
+         */
+        async function registerDevice() {
+            const input = document.getElementById("deviceId");
+            const id = input.value.trim();
+
+            if (!id) {
+                document.getElementById("result").innerHTML = "⚠️ Insert a device ID";
+                return;
+            }
+
+            try {
+                const res = await fetch("http://192.168.1.70:8000/register_device", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ device_id: id })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    document.getElementById("result").innerHTML = `⚠️ ${data.detail || "Error during registration"}`;
+                    return;
+                }
+
+                document.getElementById("result").innerHTML = "✅ Device registered: <b>" + data.device_id + "</b>";
+                input.value = "";
+                input.focus();
+
+            } catch (err) {
+                document.getElementById("result").innerHTML = "❌ Server error - backend not reachable";
+            }
+        }
+
+        /**
+         * Reindirizza alla dashboard principale.
+         */
+        function goDashboard() {
+            window.location.href = "index.html";
+        }
+
+        /**
+         * Premi Invio nel campo input per attivare la registrazione.
+         */
+        document.getElementById("deviceId").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                registerDevice();
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+DOCUMENTO HTML - F1 AI DASHBOARD
+================================================================================
+Questo file definisce la struttura della dashboard per il monitoraggio in tempo
+reale di vetture F1. L'interfaccia è composta da:
+- Barra superiore (topbar) con selettore vettura e azioni rapide
+- Griglia di grafici (velocità, accelerazione, profilo radar)
+- Grafico di confronto distanze (gap dal leader)
+- Pulsanti di controllo gara (START/STOP, RESET)
+- Tracciato interattivo con editor, zoom e Picture‑in‑Picture
+- Pannello AI Assistant per analisi dati
+- Leaderboard in tempo reale
+
+================================================================================
+INDICE DELLE SEZIONI
+================================================================================
+1.  META E IMPOSTAZIONI DI BASE ................... riga  43
+2.  RISORSE ESTERNE (CSS E LIBRERIE) ............. riga  53
+3.  TITOLO PRINCIPALE ............................. riga  68
+4.  TOPBAR - BARRA SUPERIORE ..................... riga  74
+5.  GRIGLIA GRAFICI SUPERIORI .................... riga 122
+6.  GRAFICO DI CONFRONTO DISTANZE ................ riga 152
+7.  CONTROLLI GARA ............................... riga 163
+8.  TRACCIATO LIVE CON EDITOR E CONTROLLI ........ riga 174
+9.  SEZIONE RACE CONTROL - AI E LEADERBOARD ...... riga 235
+10. PICTURE‑IN‑PICTURE CONTAINER ................. riga 285
+11. SPAZIO FINALE ................................ riga 294
+================================================================================
+-->
+<html lang="it">
+<head>
+    <!-- ============================================================
+    SEZIONE 1: META E IMPOSTAZIONI DI BASE
+    ============================================================ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F1 AI Dashboard</title>
+
+    <!-- ============================================================
+    SEZIONE 2: RISORSE ESTERNE (CSS E LIBRERIE)
+    ============================================================ -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Libreria Chart.js per i grafici interattivi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js?v=1.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <!-- Script principale (caricato in differita) -->
+    <script defer src="app.js"></script>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    SEZIONE 3: TITOLO PRINCIPALE DELLA DASHBOARD
+    ============================================================ -->
+    <h1>F1 Multi Device Dashboard</h1>
+
+    <!-- ============================================================
+    SEZIONE 4: TOPBAR – BARRA SUPERIORE
+    ============================================================ -->
+    <div class="topbar">
+
+        <!-- 4.1 Sezione sinistra – stato LIVE -->
+        <div class="topbar-left">
+            <div class="live-dot"></div>
+            <span class="live-text">LIVE RACE</span>
+        </div>
+
+        <!-- 4.2 Sezione centrale – selettore dispositivo -->
+        <div class="topbar-center">
+            <select id="deviceSelect" onchange="changeDevice()" title="Seleziona la vettura"></select>
+        </div>
+
+        <!-- 4.3 Sezione destra – pulsanti azione -->
+        <div class="topbar-right">
+            <button class="topbar-btn" onclick="setTopbarActive(this); loadDevices();">
+                🔄 Refresh
+            </button>
+            <button class="topbar-btn" onclick="setTopbarActive(this); goLogin();">
+                🔐 Login
+            </button>
+            <button class="topbar-btn danger" onclick="setTopbarActive(this); removeSelectedDevice();">
+                🗑 Delete Car
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 5: GRIGLIA GRAFICI SUPERIORI
+    ============================================================ -->
+    <div class="container">
+        <!-- Speed -->
+        <div class="card">
+            <h3>📈 Speed <span class="badge">km/h</span></h3>
+            <div class="chart-wrapper">
+                <canvas id="speedChart"></canvas>
+            </div>
+        </div>
+
+        <!-- G-Force -->
+        <div class="card">
+            <h3>📉 G-Force <span class="badge">AccX</span></h3>
+            <div class="chart-wrapper">
+                <canvas id="accChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Radar Profile -->
+        <div class="card">
+            <h3>🎯 Profile <span class="badge">Radar</span></h3>
+            <div class="chart-wrapper">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 6: GRAFICO DI CONFRONTO DISTANZE (Gap to Leader)
+    ============================================================ -->
+    <div class="container-full">
+        <div class="card">
+            <h3>🏁 Gap to Leader <span class="badge">Distance</span></h3>
+            <canvas id="compareChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 7: CONTROLLI GARA
+    ============================================================ -->
+    <div class="controls">
+        <button id="startStopBtn" class="btn-start" onclick="toggleRace()">START</button>
+        <button id="resetBtn" class="btn-reset" onclick="resetRace()">RESET</button>
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 8: TRACCIATO LIVE CON EDITOR E CONTROLLI
+    ============================================================ -->
+    <div class="container1">
+        <div class="card track-card">
+
+            <!-- 8.1 Intestazione del tracciato -->
+            <div class="track-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <h3>🏎️ <span>Monaco</span> Track</h3>
+                    <span class="timer-display" id="lapTimer">--:--</span>
+                </div>
+                <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                    <button id="toggleTrackPanel" class="track-toggle-btn" type="button">Editor</button>
+                    <button id="resetZoomBtn" class="track-toggle-btn" type="button">⟲</button>
+                    <button id="followBtn" class="track-toggle-btn" type="button">🎯 Follow</button>
+                    <button id="expandTrackBtn" class="track-toggle-btn" type="button">⛶</button>
+                    <input type="file" id="gpsFileInput" accept=".json,.csv" style="display:none;">
+                    <button id="loadFromBackendBtn" class="track-toggle-btn" type="button">📥 Carica Backend</button>
+                    <button id="gpsRecordBtn" class="track-toggle-btn" type="button">🔴 Registra GPS</button>
+                    <button id="gpsSendBtn" class="track-toggle-btn" type="button">📤 Invia GPS</button>
+                    <button id="simulateTrackBtn" class="track-toggle-btn" type="button">🧪 Simula Tracciato</button>
+                    <button id="loadRallyNotesBtn" class="track-toggle-btn" type="button">📋 Carica Note</button>
+                    <input type="file" id="rallyNotesInput" accept=".json" style="display:none;">
+                    <button id="toggleRallyNotesBtn" class="track-toggle-btn" type="button">📋 Nascondi Note</button>
+
+                    <!-- Controlli Picture‑in‑Picture (visibili solo in modalità espansa) -->
+                    <div id="pip-controls" style="display: none; gap: 6px; align-items: center; margin-left: 8px; padding-left: 8px; border-left: 1px solid rgba(255,255,255,0.06);">
+                        <span style="font-size:10px; opacity:0.5; margin-right:4px;">PiP:</span>
+                        <button class="pip-toggle-btn" data-type="speed">📈 Speed</button>
+                        <button class="pip-toggle-btn" data-type="acc">📉 G-Force</button>
+                        <button class="pip-toggle-btn" data-type="compare">🏁 Gap</button>
+                        <button class="pip-toggle-btn" data-type="radar">🎯 Radar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8.2 Pannello di controllo dell'editor -->
+            <div id="trackEditorControls" class="track-editor-controls" hidden>
+                <button id="trackEditorToggle" type="button">EDIT TRACK</button>
+                <button id="undoTrackPointBtn" type="button">UNDO POINT</button>
+                <button id="saveEditedTrackBtn" type="button">SAVE TRACK</button>
+                <button id="resetEditedTrackBtn" type="button">RESET TRACK</button>
+            </div>
+
+            <!-- 8.3 Canvas del tracciato -->
+            <canvas id="trackCanvas"></canvas>
+
+        </div>
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 9: SEZIONE RACE CONTROL – AI E LEADERBOARD
+    ============================================================ -->
+    <h2 style="padding:0 20px; margin-top:20px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; letter-spacing: 1px; font-size: 18px;">🧠 Race Control</h2>
+
+    <div class="control-grid">
+
+        <!-- 9.1 AI Assistant -->
+        <div class="card ai-panel">
+            <div class="panel-header">
+                <div class="ai-header-left">
+                    <div class="ai-avatar">
+                        <span class="ai-icon">🧠</span>
+                        <span class="ai-pulse"></span>
+                    </div>
+                    <div>
+                        <span class="ai-title">AI Engineer</span>
+                        <span class="ai-subtitle">Strategy &amp; Telemetry</span>
+                    </div>
+                </div>
+                <span class="chip engine">ENGINE</span>
+            </div>
+
+            <div class="ai-body">
+                <div class="ai-input-wrap">
+                    <span class="ai-input-icon">⌨️</span>
+                    <input id="question" placeholder="Ask about strategy, tyres, speed..." />
+                </div>
+                <button class="ai-send-btn" onclick="askAI()">
+                    <span class="btn-text">Send Request</span>
+                    <span class="btn-spinner"></span>
+                </button>
+                <div class="ai-response-wrap">
+                    <div class="ai-response-bubble" id="aiBox">
+                        <span class="ai-msg-icon">🤖</span>
+                        <span class="ai-msg-text">Waiting for your question...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 9.2 Leaderboard in tempo reale -->
+        <div class="card">
+            <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; font-size: 14px; text-transform: uppercase;">🏆 Live Standings</span>
+                <span class="chip" style="background: rgba(0, 255, 136, 0.2); color: #00ff88; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold;">REALTIME</span>
+            </div>
+            <div id="leaderboard"></div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 10: PICTURE‑IN‑PICTURE CONTAINER (flottante)
+    Visibile solo in modalità fullscreen
+    ============================================================ -->
+    <div id="pip-container" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999; flex-wrap: wrap; gap: 12px; max-width: 60vw; pointer-events: none;">
+        <!-- I widget PiP vengono inseriti dinamicamente da app.js -->
+    </div>
+
+    <!-- ============================================================
+    SEZIONE 11: SPAZIO FINALE
+    ============================================================ -->
+    <div style="height: 40px;"></div>
+
+</body>
+</html>

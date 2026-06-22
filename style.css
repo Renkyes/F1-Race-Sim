@@ -1,0 +1,1717 @@
+/* ==========================================================================
+   STYLE.CSS - F1 DASHBOARD (DARK ELEGANT)
+   ==========================================================================
+   Tema scuro bilanciato: grigio profondo, card semitrasparenti,
+   accenti blu/arancione per massima leggibilità.
+
+   ==========================================================================
+   INDICE DELLE SEZIONI
+   ==========================================================================
+   1.  IMPORTAZIONE FONT ........................... riga   33
+   2.  VARIABILI CSS ............................... riga   39
+   3.  RESET E STILI BASE .......................... riga   64
+   4.  SCROLLBAR ................................... riga   84
+   5.  HEADER ...................................... riga  101
+   6.  TOPBAR ...................................... riga  126
+   7.  GRIGLIA CARD ................................ riga  214
+   8.  CARD ........................................ riga  227
+   9.  CANVAS (GRAFICI) ............................ riga  283
+  10.  TRACCIATO ................................... riga  308
+  11.  CONTROLLI GARA .............................. riga  402
+  12.  AI PANEL E LEADERBOARD ...................... riga  475
+  13.  PANNELLO EDITOR ............................. riga  610
+  14.  MODALITÀ ESPANSA ............................ riga  632
+  15.  PICTURE-IN-PICTURE (PiP) .................... riga  672
+  16.  CLASSI UTILITY .............................. riga  794
+  17.  ANIMAZIONI .................................. riga  804
+  18.  SFONDO ANIMATO .............................. riga  824
+  19.  RESPONSIVE .................................. riga  845
+  20.  PIP RESIZE HANDLE ........................... riga  894
+  21.  GRAFICO COMPARISON .......................... riga  914
+  22.  AI ENGINEER UI .............................. riga  937
+  23.  PULSANTI GPS E SIMULAZIONE .................. riga 1048
+  24.  CONTATORE FPS ............................... riga 1064
+   ========================================================================== */
+
+/* ==========================================================================
+   1. IMPORTAZIONE FONT
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+/* ==========================================================================
+   2. VARIABILI CSS
+   ========================================================================== */
+:root {
+    --f1-red: #ff3b30;
+    --f1-red-glow: rgba(255, 59, 48, 0.25);
+    --f1-blue: #4a9eff;
+    --f1-blue-glow: rgba(74, 158, 255, 0.2);
+    --f1-orange: #ff7b00;
+    --f1-orange-glow: rgba(255, 123, 0, 0.2);
+    --f1-green: #4caf50;
+    --f1-green-glow: rgba(76, 175, 80, 0.2);
+    --f1-bg: #121212;
+    --f1-card-bg: rgba(30, 30, 36, 0.88);
+    --f1-border: rgba(255, 255, 255, 0.06);
+    --f1-text: #e8e8ea;
+    --f1-text-muted: rgba(255, 255, 255, 0.5);
+    --f1-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --f1-radius: 16px;
+    --f1-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ==========================================================================
+   3. RESET E STILI BASE
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
+    background: var(--f1-bg);
+    background-image:
+        radial-gradient(circle at 30% 40%, rgba(74, 158, 255, 0.04), transparent 40%),
+        radial-gradient(circle at 70% 60%, rgba(255, 123, 0, 0.03), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255, 59, 48, 0.02), transparent 50%);
+    color: var(--f1-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   4. SCROLLBAR
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--f1-blue);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--f1-orange);
+    box-shadow: 0 0 12px var(--f1-orange-glow);
+}
+
+/* ==========================================================================
+   5. HEADER – Titolo principale
+   ========================================================================== */
+h1 {
+    margin: 0;
+    padding: 20px 28px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(74, 158, 255, 0.06), rgba(255, 123, 0, 0.03));
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--f1-blue), var(--f1-orange), var(--f1-red));
+    border-image-slice: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-shadow: 0 0 40px rgba(74, 158, 255, 0.05);
+}
+
+h1::before {
+    content: '🏎️';
+    font-size: 32px;
+    filter: drop-shadow(0 0 10px var(--f1-blue-glow));
+}
+
+/* ==========================================================================
+   6. TOPBAR – Barra superiore
+   ========================================================================== */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    margin: 12px 24px 20px 24px;
+    background: rgba(18, 18, 18, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--f1-border);
+    border-radius: var(--f1-radius);
+    box-shadow: var(--f1-shadow);
+    transition: var(--f1-transition);
+}
+
+.topbar:hover {
+    border-color: rgba(74, 158, 255, 0.15);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.topbar-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    margin-left: 20px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Live dot */
+.live-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--f1-blue);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--f1-blue-glow), inset 0 0 6px rgba(74, 158, 255, 0.3);
+    animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.6); opacity: 0.4; }
+}
+
+.live-text {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--f1-blue);
+    text-shadow: 0 0 20px var(--f1-blue-glow);
+    animation: liveTextPulse 2s ease-in-out infinite;
+}
+
+@keyframes liveTextPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Selettore dispositivo */
+#deviceSelect {
+    background: rgba(30, 30, 36, 0.9);
+    color: #fff;
+    border: 1px solid var(--f1-border);
+    padding: 8px 40px 8px 16px;
+    border-radius: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--f1-transition);
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%234a9eff' d='M0 0l6 6 6-6z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    min-width: 150px;
+}
+
+#deviceSelect:focus,
+#deviceSelect:active {
+    border-color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+    background-color: rgba(30, 30, 36, 0.95);
+}
+
+#deviceSelect option {
+    background: #1e1e24;
+    color: #fff;
+    padding: 8px 12px;
+}
+
+#deviceSelect:hover {
+    border-color: var(--f1-blue);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.04);
+}
+
+/* Pulsanti topbar */
+.topbar-btn {
+    position: relative;
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: rgba(30, 30, 36, 0.6);
+    border: 1px solid var(--f1-border);
+    color: var(--f1-text);
+    cursor: pointer;
+    transition: var(--f1-transition);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+}
+
+.topbar-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--f1-blue);
+    box-shadow: 0 4px 20px rgba(74, 158, 255, 0.08);
+    background: rgba(74, 158, 255, 0.04);
+    color: var(--f1-blue);
+}
+
+.topbar-btn:active {
+    transform: scale(0.96);
+}
+
+.topbar-btn.active {
+    border-color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.06);
+    color: var(--f1-blue);
+}
+
+.topbar-btn.danger:hover {
+    border-color: var(--f1-red);
+    box-shadow: 0 4px 20px var(--f1-red-glow);
+    color: var(--f1-red);
+}
+
+.topbar-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(74, 158, 255, 0.04), transparent 60%);
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.topbar-btn:active::after {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   7. GRIGLIA CARD
+   ========================================================================== */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    padding: 0 24px;
+    margin-top: 20px;
+}
+
+.container-full {
+    padding: 0 24px;
+    margin-top: 20px;
+}
+
+/* ==========================================================================
+   8. CARD (glassmorphism scuro)
+   ========================================================================== */
+.card {
+    background: var(--f1-card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--f1-border);
+    border-radius: var(--f1-radius);
+    padding: 20px 22px 22px 22px;
+    box-shadow: var(--f1-shadow);
+    transition: var(--f1-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--f1-blue), var(--f1-orange), var(--f1-red));
+    opacity: 0;
+    transition: var(--f1-transition);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(74, 158, 255, 0.12);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(74, 158, 255, 0.06);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 100%;
+    background: repeating-linear-gradient(45deg,
+        transparent,
+        transparent 8px,
+        rgba(74, 158, 255, 0.01) 8px,
+        rgba(74, 158, 255, 0.01) 10px
+    );
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.card h3 {
+    margin: 0 0 14px 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--f1-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card h3 .badge {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 9px;
+    padding: 2px 12px;
+    border-radius: 20px;
+    background: rgba(74, 158, 255, 0.08);
+    color: var(--f1-blue);
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(74, 158, 255, 0.06);
+}
+
+/* ==========================================================================
+   9. CANVAS (GRAFICI)
+   ========================================================================== */
+canvas {
+    width: 100% !important;
+    height: 200px !important;
+    display: block;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.chart-wrapper {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--f1-border);
+    position: relative;
+    background: transparent;
+    transition: box-shadow 0.3s ease;
+}
+
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: 200px !important;
+    display: block;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    box-shadow: none !important;
+}
+
+.chart-wrapper:hover {
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.04);
+}
+
+/* ==========================================================================
+   10. TRACCIATO (Canvas della pista)
+   ========================================================================== */
+.track-card {
+    margin: 20px 24px;
+    position: relative;
+    padding: 18px 20px 20px 20px;
+}
+
+.track-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.track-header h3 {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(74, 158, 255, 0.05);
+}
+
+.track-header h3 span {
+    color: var(--f1-blue);
+}
+
+.track-toggle-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--f1-border);
+    background: rgba(30, 30, 36, 0.6);
+    color: var(--f1-text);
+    cursor: pointer;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    transition: var(--f1-transition);
+}
+
+.track-toggle-btn:hover {
+    border-color: var(--f1-blue);
+    color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.04);
+    transform: translateY(-1px);
+}
+
+.track-toggle-btn.active {
+    border-color: var(--f1-blue);
+    color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.06);
+}
+
+#trackCanvas {
+    width: 100%;
+    height: 480px;
+    min-height: 350px;
+    background: radial-gradient(ellipse at center, #16161c, #0d0d10);
+    border-radius: 12px;
+    border: 1px solid var(--f1-border);
+    display: block;
+    box-sizing: border-box;
+    transition: var(--f1-transition);
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.4);
+}
+
+#trackCanvas:hover {
+    border-color: rgba(74, 158, 255, 0.08);
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.3);
+}
+
+/* Timer giro record */
+.timer-display {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--f1-border);
+    color: var(--f1-blue);
+    text-shadow: 0 0 30px var(--f1-blue-glow);
+    display: inline-block;
+}
+
+.timer-display.purple {
+    color: var(--f1-orange);
+    text-shadow: 0 0 30px var(--f1-orange-glow);
+    border-color: rgba(255, 123, 0, 0.15);
+}
+
+/* ==========================================================================
+   11. CONTROLLI GARA
+   ========================================================================== */
+.controls {
+    display: flex;
+    gap: 14px;
+    padding: 14px 24px 0 24px;
+}
+
+.controls button {
+    flex: 1;
+    position: relative;
+    overflow: visible !important;
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--f1-border);
+    background: rgba(30, 30, 36, 0.8);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--f1-transition);
+    color: var(--f1-text);
+    box-shadow: var(--f1-shadow);
+}
+
+.controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.controls button:active {
+    transform: scale(0.97);
+}
+
+.controls button.loading {
+    opacity: 0.4;
+    pointer-events: none;
+    transform: scale(0.98);
+}
+
+.controls button::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    opacity: 0;
+    transition: var(--f1-transition);
+    filter: blur(8px);
+    pointer-events: none;
+}
+
+.controls button:hover::before {
+    opacity: 0.2;
+    animation: glowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(1.03); }
+}
+
+.controls .btn-start {
+    border-color: rgba(74, 158, 255, 0.15);
+    color: var(--f1-blue);
+}
+
+.controls .btn-start:hover {
+    border-color: var(--f1-blue);
+    box-shadow: 0 8px 32px rgba(74, 158, 255, 0.06);
+    background: rgba(74, 158, 255, 0.02);
+}
+
+.controls .btn-start.active {
+    border-color: var(--f1-red);
+    color: var(--f1-red);
+    box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.06);
+}
+
+.controls .btn-start.active:hover {
+    box-shadow: 0 8px 32px var(--f1-red-glow);
+    background: rgba(255, 59, 48, 0.02);
+}
+
+.controls .btn-reset {
+    border-color: var(--f1-border);
+    color: var(--f1-text-muted);
+}
+
+.controls .btn-reset:hover {
+    border-color: var(--f1-orange);
+    color: var(--f1-orange);
+    box-shadow: 0 8px 32px rgba(255, 123, 0, 0.06);
+}
+
+.controls button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(74, 158, 255, 0.03), transparent 60%);
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.controls button:active::after {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   12. AI PANEL E LEADERBOARD (griglia inferiore)
+   ========================================================================== */
+.control-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 20px;
+    padding: 0 24px;
+    margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- 12.1 AI PANEL --- */
+.ai-panel input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    height: 46px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--f1-border);
+    background: rgba(0, 0, 0, 0.2);
+    color: #fff;
+    box-sizing: border-box;
+    transition: var(--f1-transition);
+}
+
+.ai-panel input:focus {
+    border-color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.04);
+    outline: none;
+}
+
+.ai-panel input::placeholder {
+    color: var(--f1-text-muted);
+}
+
+.ai-panel button {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid var(--f1-border);
+    background: rgba(30, 30, 36, 0.6);
+    color: var(--f1-text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--f1-transition);
+    box-shadow: var(--f1-shadow);
+}
+
+.ai-panel button:hover {
+    border-color: var(--f1-blue);
+    box-shadow: 0 8px 32px rgba(74, 158, 255, 0.04);
+    transform: translateY(-2px);
+    color: var(--f1-blue);
+}
+
+.ai-panel button.sending {
+    border-color: var(--f1-blue);
+    color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.06);
+}
+
+#aiBox {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--f1-border);
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #d0d0d8;
+    min-height: 60px;
+    transition: var(--f1-transition);
+}
+
+#aiBox:not(:empty) {
+    border-color: rgba(74, 158, 255, 0.08);
+}
+
+/* --- 12.2 LEADERBOARD --- */
+#leaderboard {
+    position: relative;
+    min-height: 400px;
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+    padding-bottom: 4px;
+}
+
+#leaderboard::-webkit-scrollbar {
+    width: 4px;
+}
+#leaderboard::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+#leaderboard::-webkit-scrollbar-thumb {
+    background: var(--f1-blue);
+    border-radius: 10px;
+}
+#leaderboard::-webkit-scrollbar-thumb:hover {
+    box-shadow: 0 0 12px var(--f1-blue-glow);
+}
+
+/* Righe della leaderboard */
+.leaderboard-row {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    padding: 0 12px 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 3px solid transparent;
+    border-radius: 12px;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s ease;
+    will-change: transform;
+    pointer-events: none;
+    backdrop-filter: blur(2px);
+}
+
+.leaderboard-row:hover {
+    background: rgba(74, 158, 255, 0.04);
+}
+
+.leaderboard-row.selected {
+    background: rgba(74, 158, 255, 0.06) !important;
+    border-left-color: var(--f1-blue) !important;
+    box-shadow: inset 0 0 30px rgba(74, 158, 255, 0.02);
+}
+
+.leaderboard-row.overtaking {
+    background: rgba(255, 123, 0, 0.06) !important;
+    border-left-color: var(--f1-orange) !important;
+    animation: flashOrange 0.6s ease-out forwards;
+}
+
+@keyframes flashOrange {
+    0% { background: rgba(255, 123, 0, 0.15); }
+    100% { background: rgba(255, 255, 255, 0.02); }
+}
+
+/* Posizione */
+.leaderboard-pos {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    min-width: 40px;
+    text-align: center;
+    letter-spacing: -0.5px;
+    color: rgba(255, 255, 255, 0.15);
+    transition: color 0.3s ease;
+}
+.leaderboard-pos.pos-1 { color: #ffd700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+.leaderboard-pos.pos-2 { color: #c0c0c0; text-shadow: 0 0 20px rgba(192, 192, 192, 0.1); }
+.leaderboard-pos.pos-3 { color: #cd7f32; text-shadow: 0 0 20px rgba(205, 127, 50, 0.1); }
+.leaderboard-pos.pos-other { color: rgba(255, 255, 255, 0.2); }
+
+/* Nome */
+.leaderboard-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    min-width: 80px;
+    color: var(--f1-text);
+    letter-spacing: 0.3px;
+}
+.leaderboard-name .highlight {
+    color: var(--f1-blue);
+}
+
+/* Barra progresso distanza */
+.leaderboard-progress-wrap {
+    flex: 1;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.leaderboard-progress-bg {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+.leaderboard-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--f1-blue), var(--f1-green));
+    transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 0%;
+}
+.leaderboard-progress-label {
+    font-family: 'Rajdhani', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--f1-text-muted);
+    min-width: 50px;
+    text-align: right;
+}
+
+/* Dettagli */
+.leaderboard-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--f1-text-muted);
+    flex-shrink: 0;
+}
+.leaderboard-details .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.leaderboard-details .detail-icon {
+    font-size: 12px;
+    opacity: 0.5;
+}
+.leaderboard-details .detail-value {
+    font-weight: 600;
+    color: var(--f1-text);
+}
+.leaderboard-details .detail-value.speed {
+    color: var(--f1-blue);
+}
+.leaderboard-details .detail-value.pit {
+    color: var(--f1-red);
+}
+.leaderboard-details .detail-value.best {
+    color: var(--f1-orange);
+}
+
+/* Indicatore cambio posizione */
+.leaderboard-change {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 900;
+    min-width: 36px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+.leaderboard-change.up {
+    color: var(--f1-green);
+    text-shadow: 0 0 20px var(--f1-green-glow);
+}
+.leaderboard-change.down {
+    color: var(--f1-red);
+    text-shadow: 0 0 20px var(--f1-red-glow);
+}
+.leaderboard-change.neutral {
+    color: rgba(255, 255, 255, 0.08);
+    font-size: 10px;
+}
+
+/* ==========================================================================
+   RESPONSIVE LEADERBOARD (mobile)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .leaderboard-row {
+        height: 56px;
+        padding: 0 8px;
+        gap: 6px;
+        flex-wrap: nowrap;
+    }
+    .leaderboard-pos {
+        font-size: 16px;
+        min-width: 30px;
+    }
+    .leaderboard-name {
+        font-size: 13px;
+        min-width: 60px;
+    }
+    .leaderboard-progress-wrap {
+        min-width: 40px;
+    }
+    .leaderboard-details {
+        gap: 8px;
+        font-size: 11px;
+    }
+    .leaderboard-details .detail-item {
+        display: none;
+    }
+    .leaderboard-details .detail-item.tyre {
+        display: flex;
+    }
+    .leaderboard-change {
+        font-size: 12px;
+        min-width: 28px;
+    }
+}
+
+/* ==========================================================================
+   13. PANNELLO EDITOR TRACCIATO
+   ========================================================================== */
+.track-editor-controls {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.track-editor-controls[hidden] {
+    display: none;
+}
+
+.track-editor-controls button {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--f1-border);
+    background: rgba(30, 30, 36, 0.6);
+    color: var(--f1-text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--f1-transition);
+}
+
+.track-editor-controls button:hover {
+    border-color: var(--f1-blue);
+    color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.04);
+}
+
+/* ==========================================================================
+   14. MODALITÀ ESPANSA (fullscreen track)
+   ========================================================================== */
+body.track-expanded .container,
+body.track-expanded .container-full,
+body.track-expanded .controls,
+body.track-expanded h2,
+body.track-expanded .control-grid {
+    display: none !important;
+}
+
+body.track-expanded .container1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 110px);
+    margin: 0 24px;
+    padding: 0;
+}
+
+body.track-expanded .container1 .card.track-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    height: 100%;
+}
+
+body.track-expanded #trackCanvas {
+    flex: 1;
+    height: auto !important;
+    min-height: 400px;
+}
+
+body.track-expanded h1 {
+    display: none;
+}
+
+body.track-expanded {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+body.track-expanded .topbar {
+    flex-shrink: 0;
+    margin: 6px 24px;
+}
+
+body.track-expanded .container1 {
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   15. PICTURE-IN-PICTURE (PiP)
+   ========================================================================== */
+body.track-expanded #pip-container {
+    display: block !important;
+}
+
+#pip-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+body.track-expanded #pip-container {
+    display: flex !important;
+}
+
+.pip-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(18, 18, 18, 0.94);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--f1-border);
+    border-radius: 14px;
+    padding: 12px 12px 8px 12px;
+    box-shadow: var(--f1-shadow), 0 0 0 1px rgba(74, 158, 255, 0.02);
+    width: 300px;
+    height: 170px;
+    pointer-events: auto;
+    cursor: grab;
+    user-select: none;
+    transition: border-color 0.3s ease;
+}
+
+.pip-item[data-type="speed"] { border-color: rgba(74, 158, 255, 0.3); }
+.pip-item[data-type="acc"]   { border-color: rgba(255, 59, 48, 0.3); }
+.pip-item[data-type="compare"] { border-color: rgba(255, 123, 0, 0.3); }
+.pip-item[data-type="radar"]   { border-color: rgba(76, 175, 80, 0.3); }
+
+.pip-item:active {
+    cursor: grabbing;
+}
+
+.pip-item:hover {
+    border-color: rgba(74, 158, 255, 0.15);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+}
+
+.pip-item canvas {
+    width: 100% !important;
+    height: calc(100% - 24px) !important;
+    display: block;
+    border-radius: 6px;
+    pointer-events: none;
+}
+
+.pip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--f1-text-muted);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--f1-border);
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.pip-header .pip-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pip-header .pip-title .pip-icon {
+    font-size: 14px;
+}
+
+.pip-header .pip-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--f1-blue);
+    text-shadow: 0 0 20px var(--f1-blue-glow);
+}
+
+.pip-header .pip-value.acc {
+    color: var(--f1-red);
+    text-shadow: 0 0 20px var(--f1-red-glow);
+}
+
+.pip-close {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: var(--f1-red);
+    color: #fff;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.3);
+    transition: all 0.2s;
+    padding: 0;
+    z-index: 10;
+}
+
+.pip-close:hover {
+    transform: scale(1.2);
+    background: #ff4d4d;
+    box-shadow: 0 0 20px var(--f1-red-glow);
+}
+
+.pip-toggle-btn {
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--f1-border);
+    background: rgba(30, 30, 36, 0.6);
+    color: var(--f1-text-muted);
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.pip-toggle-btn:hover {
+    border-color: var(--f1-blue);
+    color: var(--f1-blue);
+}
+
+.pip-toggle-btn.active {
+    border-color: var(--f1-blue);
+    background: rgba(74, 158, 255, 0.04);
+    color: var(--f1-blue);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.04);
+}
+
+/* ==========================================================================
+   16. CLASSI UTILITY
+   ========================================================================== */
+.f1-blue { color: var(--f1-blue) !important; font-weight: bold; text-shadow: 0 0 20px var(--f1-blue-glow); }
+.f1-orange { color: var(--f1-orange) !important; font-weight: bold; text-shadow: 0 0 20px var(--f1-orange-glow); }
+.f1-red { color: var(--f1-red) !important; font-weight: bold; text-shadow: 0 0 20px var(--f1-red-glow); }
+
+.digital-number {
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   17. ANIMAZIONI DI ENTRY
+   ========================================================================== */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); filter: blur(2px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes slideTop {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes titleReveal {
+    from { opacity: 0; transform: translateY(-10px); letter-spacing: 10px; }
+    to { opacity: 1; transform: translateY(0); letter-spacing: 3px; }
+}
+
+.container .card:nth-child(1) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.05s; }
+.container .card:nth-child(2) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.12s; }
+.container .card:nth-child(3) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.19s; }
+.container .card:nth-child(4) { animation: fadeUp 0.5s ease forwards; animation-delay: 0.26s; }
+
+/* ==========================================================================
+   18. SFONDO ANIMATO
+   ========================================================================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(74, 158, 255, 0.03), transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(255, 123, 0, 0.02), transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(255, 59, 48, 0.02), transparent 50%);
+    animation: bgMove 35s ease-in-out infinite alternate;
+    z-index: -1;
+    pointer-events: none;
+}
+
+@keyframes bgMove {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-5%, -3%) scale(1.05); }
+    50% { transform: translate(3%, 5%) scale(0.95); }
+    75% { transform: translate(-3%, -5%) scale(1.02); }
+    100% { transform: translate(5%, 3%) scale(1.08); }
+}
+
+/* ==========================================================================
+   19. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 1200px) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .topbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 16px;
+    }
+
+    .topbar-center {
+        order: 3;
+        flex-basis: 100%;
+        margin: 4px 0 0 0;
+    }
+
+    .topbar-center #deviceSelect {
+        width: 100%;
+    }
+
+    #trackCanvas {
+        height: 350px;
+    }
+
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 18px;
+        padding: 14px 18px;
+    }
+
+    .controls button {
+        font-size: 12px;
+        padding: 12px 16px;
+    }
+
+    .timer-display {
+        font-size: 16px;
+        padding: 2px 12px;
+    }
+}
+
+/* ==========================================================================
+   20. PIP RESIZE HANDLE
+   ========================================================================== */
+.pip-resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    cursor: nwse-resize;
+    background: linear-gradient(135deg, transparent 50%, rgba(255,255,255,0.15) 50%);
+    border-bottom-right-radius: 14px;
+    pointer-events: auto;
+    transition: background 0.2s;
+}
+
+.pip-resize-handle:hover {
+    background: linear-gradient(135deg, transparent 50%, rgba(74, 158, 255, 0.25) 50%);
+}
+
+.pip-resize-handle::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    right: 3px;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid rgba(255,255,255,0.15);
+    border-bottom: 2px solid rgba(255,255,255,0.15);
+    border-radius: 0 0 3px 0;
+}
+
+/* ==========================================================================
+   21. GRAFICO COMPARISON (Gap to Leader)
+   ========================================================================== */
+#compareChart {
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 8px 4px;
+    transition: all 0.3s ease;
+}
+
+.compare-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    fill: #ffffff;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes barGrow {
+    from { transform: scaleX(0); opacity: 0; }
+    to { transform: scaleX(1); opacity: 1; }
+}
+
+.chartjs-tooltip {
+    background: rgba(18, 18, 18, 0.92) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(74, 158, 255, 0.15) !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+    color: #fff !important;
+    font-family: 'Rajdhani', sans-serif !important;
+}
+
+.leader-bar {
+    background: linear-gradient(90deg, #ffd700, #ffaa00) !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2) !important;
+}
+
+/* ==========================================================================
+   22. AI ENGINEER UI
+   ========================================================================== */
+.ai-panel {
+    background: var(--f1-card-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--f1-border);
+    border-radius: var(--f1-radius);
+    padding: 20px 22px 22px 22px;
+    transition: var(--f1-transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.ai-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--f1-blue), var(--f1-orange), var(--f1-red));
+    opacity: 0.6;
+    transition: var(--f1-transition);
+}
+
+.ai-panel:hover::before {
+    opacity: 1;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.ai-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ai-avatar {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(74, 158, 255, 0.15), rgba(255, 123, 0, 0.05));
+    border: 1px solid rgba(74, 158, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: var(--f1-transition);
+}
+
+.ai-avatar:hover {
+    transform: scale(1.05);
+    border-color: var(--f1-blue);
+}
+
+.ai-pulse {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    border: 1px solid var(--f1-blue);
+    animation: aiPulse 2s ease-in-out infinite;
+    opacity: 0.5;
+}
+
+@keyframes aiPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.15); opacity: 0; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+.ai-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    display: block;
+    line-height: 1.2;
+}
+
+.ai-subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--f1-text-muted);
+    letter-spacing: 0.3px;
+}
+
+.chip.engine {
+    background: rgba(74, 158, 255, 0.15);
+    color: var(--f1-blue);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border: 1px solid rgba(74, 158, 255, 0.08);
+}
+
+.ai-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ai-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--f1-border);
+    border-radius: 12px;
+    transition: var(--f1-transition);
+}
+
+.ai-input-wrap:focus-within {
+    border-color: var(--f1-blue);
+    box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.05);
+}
+
+.ai-input-icon {
+    padding: 0 12px 0 14px;
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+#question {
+    width: 100%;
+    padding: 12px 14px 12px 0;
+    background: transparent;
+    border: none;
+    color: var(--f1-text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#question::placeholder {
+    color: var(--f1-text-muted);
+    font-weight: 300;
+}
+
+.ai-send-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(74, 158, 255, 0.1);
+    background: linear-gradient(135deg, rgba(74, 158, 255, 0.04), rgba(255, 123, 0, 0.02));
+    color: var(--f1-text);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--f1-transition);
+    box-shadow: var(--f1-shadow);
+    overflow: hidden;
+}
+
+.ai-send-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(74, 158, 255, 0.04), transparent 60%);
+    opacity: 0;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.ai-send-btn:hover {
+    border-color: var(--f1-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(74, 158, 255, 0.04);
+}
+
+.ai-send-btn:hover::after {
+    opacity: 1;
+}
+
+.ai-send-btn:active {
+    transform: scale(0.97);
+}
+
+.btn-spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--f1-blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+.ai-send-btn.sending .btn-text {
+    opacity: 0.7;
+}
+.ai-send-btn.sending .btn-spinner {
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.ai-response-wrap {
+    margin-top: 4px;
+}
+
+.ai-response-bubble {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--f1-border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-height: 60px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: var(--f1-transition);
+    color: #d0d0d8;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.ai-response-bubble:not(:empty) {
+    border-color: rgba(74, 158, 255, 0.08);
+}
+
+.ai-msg-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ai-msg-text {
+    flex: 1;
+    word-break: break-word;
+}
+
+.ai-response-bubble.thinking .ai-msg-text::after {
+    content: '...';
+    animation: dots 1.2s steps(3, end) infinite;
+    display: inline-block;
+    width: 20px;
+    text-align: left;
+}
+
+@keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+}
+
+/* Responsive AI */
+@media (max-width: 768px) {
+    .panel-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .ai-title {
+        font-size: 12px;
+    }
+    .ai-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    .ai-response-bubble {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+    #question {
+        font-size: 13px;
+        padding: 10px 12px 10px 0;
+    }
+}
+
+/* ==========================================================================
+   23. PULSANTI GPS E SIMULAZIONE
+   ========================================================================== */
+#gpsRecordBtn.active {
+    background-color: #ff3b30;
+    color: white;
+    border-color: #ff3b30;
+}
+
+#simulateTrackBtn {
+    background: rgba(255, 123, 0, 0.08);
+    border-color: rgba(255, 123, 0, 0.15);
+    color: var(--f1-orange);
+}
+
+#simulateTrackBtn:hover {
+    background: rgba(255, 123, 0, 0.15);
+    border-color: var(--f1-orange);
+}
+
+/* ==========================================================================
+   24. CONTATORE FPS (creato dinamicamente da app.js)
+   ========================================================================== */
+.fps-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(18, 18, 18, 0.9);
+    color: var(--f1-blue);
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--f1-border);
+    z-index: 9999;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    user-select: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.5px;
+    transition: var(--f1-transition);
+}
+
+.fps-counter:hover {
+    border-color: rgba(74, 158, 255, 0.2);
+}

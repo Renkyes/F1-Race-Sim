@@ -1,0 +1,60 @@
+{
+  "points": [
+    {
+      "lat": 43.852186928329736,
+      "lon": 11.121407055678462,
+      "note": "🏁 Start",
+      "speed": 120,
+      "danger": 1,
+      "position": 0.0
+    },
+    {
+      "lat": 43.853687864171484,
+      "lon": 11.122286820257989,
+      "note": "Curva a destra, 3a marcia",
+      "speed": 75,
+      "danger": 2,
+      "position": 0.15
+    },
+    {
+      "lat": 43.85344028972699,
+      "lon": 11.128187680242624,
+      "note": "Curva a destra, 3a marcia",
+      "speed": 60,
+      "danger": 3,
+      "position": 0.3
+    },
+    {
+      "lat": 43.85183103078559,
+      "lon": 11.131277585107307,
+      "note": "Curva a destra, 3a marcia",
+      "speed": 50,
+      "danger": 4,
+      "position": 0.5
+    },
+    {
+      "lat": 43.850175305592145,
+      "lon": 11.130011582419694,
+      "note": "Rettilineo, tira",
+      "speed": 160,
+      "danger": 1,
+      "position": 0.7
+    },
+    {
+      "lat": 43.84943253543014,
+      "lon": 11.125848793921442,
+      "note": "Curva a destra, 2a marcia",
+      "speed": 55,
+      "danger": 3,
+      "position": 0.85
+    },
+    {
+      "lat": 43.85192387382795,
+      "lon": 11.125741505558084,
+      "note": "🏁 Finish",
+      "speed": 100,
+      "danger": 1,
+      "position": 1.0
+    }
+  ]
+}
