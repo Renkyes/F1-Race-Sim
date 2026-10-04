@@ -1,10 +1,10 @@
-# 🏎️ F1 Telemetry & AI Race Dashboard
+# F1 Telemetry & AI Race Dashboard
 
 Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il monitoraggio in tempo reale di vetture da competizione, con simulazione di gara, tracciato interattivo, grafici telemetrici, ghost car, assistente AI e tanto altro.
 
 ---
 
-## 📌 Indice
+## Indice
 
 - [Funzionalità principali](#-funzionalità-principali)
 - [Tecnologie utilizzate](#-tecnologie-utilizzate)
@@ -20,7 +20,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
 
 ---
 
-## 🚀 Funzionalità principali
+## Funzionalità principali
 
 - **Monitoraggio live** – velocità, accelerazione, posizione in pista e classifica aggiornati ogni 50 ms (20 Hz) via WebSocket.
 - **Tracciato interattivo** – disegna e modifica il circuito direttamente dal browser con:
@@ -29,7 +29,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
   - **Editor di tracciato** con aggiunta/rimozione punti, salvataggio e reset.
   - **Salvataggio normalizzato** – i tracciati personalizzati vengono salvati in `localStorage` con coordinate normalizzate per preservare le proporzioni.
 - **Ghost Car** – confronta il giro del pilota selezionato con il miglior giro della sessione; il fantasma attende al traguardo se arriva prima dell'auto reale.
-- **Follow Mode** – attiva il pulsante **🎯 Follow** per centrare automaticamente la pista sulla vettura selezionata, con movimento fluido.
+- **Follow Mode** – attiva il pulsante **Follow** per centrare automaticamente la pista sulla vettura selezionata, con movimento fluido.
 - **Grafici telemetrici**:
   - Velocità istantanea (km/h)
   - Accelerazione longitudinale (AccX)
@@ -43,7 +43,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
   - Posizione (P1, P2, …) con colori per i primi tre.
   - Distanza percorsa (metri) e barra di progresso.
   - Miglior tempo sul giro (colorato in viola per il giro record, arancione per il personale best).
-  - Velocità attuale e indicazione se ai box (🛑 PIT).
+  - Velocità attuale e indicazione se ai box (PIT).
   - Barra di usura gomme con colore dinamico (verde → giallo → rosso).
   - **Indicatore di sorpasso** (↑ / ↓) persistente per 5 secondi con flash arancione sulla riga.
 - **Note rally** – importa da file JSON un insieme di note (posizione, velocità consigliata, pericolosità) che influenzano il comportamento delle vetture simulate, con visualizzazione a punti colorati sul tracciato.
@@ -52,7 +52,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
 
 ---
 
-## 🧱 Tecnologie utilizzate
+## Tecnologie utilizzate
 
 | Componente               | Tecnologia                               |
 |--------------------------|------------------------------------------|
@@ -66,7 +66,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
 
 ---
 
-## 📁 Struttura dei file
+## Struttura dei file
 
 ```
 /
@@ -80,7 +80,7 @@ Benvenuto nella **F1 Multi‑Device Dashboard**, un sistema completo per il moni
 
 ---
 
-## ⚙️ Prerequisiti e installazione
+## Prerequisiti e installazione
 
 ### 1. Python e dipendenze
 
@@ -125,7 +125,7 @@ Se possiedi un ESP32 con sensore di accelerazione e velocità, puoi inviare dati
 
 ---
 
-## 🚀 Avvio del server
+## Avvio del server
 
 Lancia il backend FastAPI (che serve anche i file statici):
 
@@ -139,24 +139,24 @@ Apri il browser su `http://192.168.1.70:8000` (o l'IP del tuo server) per visual
 
 ---
 
-## 🖥️ Utilizzo dettagliato della dashboard
+## Utilizzo dettagliato della dashboard
 
-### 🔐 Registrazione di un nuovo dispositivo
+### Registrazione di un nuovo dispositivo
 
-1. Clicca su **🔐 Login** nella topbar.
+1. Clicca su **Login** nella topbar.
 2. Inserisci un ID dispositivo (es. `car_1`, `esp32_01`) e premi **Register Device**.
 3. Il dispositivo apparirà nella lista a tendina della topbar e inizierà a essere simulato (se virtuale) o riceverà dati via API.
 
-### 🏁 Selezionare una vettura
+### Selezionare una vettura
 
 Usa il menu a tendina al centro della topbar per scegliere la vettura da monitorare. I grafici, la classifica e la ghost car si aggiorneranno in tempo reale.
 
-### 🎮 Controlli gara
+### Controlli gara
 
 - **START/STOP** – avvia o mette in pausa la simulazione delle vetture virtuali (le vetture hardware continuano a inviare dati).
 - **RESET** – resetta tutte le vetture (distanza zero, gomme nuove, buffer azzerati) e ferma la simulazione.
 
-### 🗺️ Editor del tracciato
+### Editor del tracciato
 
 1. Clicca su **Editor** per aprire i controlli.
 2. Clicca su **EDIT TRACK** per entrare in modalità disegno.
@@ -167,38 +167,38 @@ Usa il menu a tendina al centro della topbar per scegliere la vettura da monitor
    - Al caricamento, vengono denormalizzate con una scala fissa (`TRACK_SCALE = 1000`) per preservare le proporzioni.
 6. **RESET TRACK** ripristina il tracciato di default.
 
-### 🔍 Zoom e visualizzazione
+### Zoom e visualizzazione
 
 - **Rotellina del mouse** – zoom in/out centrato sul canvas.
 - **⟲** – ripristina lo zoom a 1.0 e resetta il pan.
 - **⛶** – **modalità espansa**: il tracciato occupa tutta la finestra, nascondendo grafici, controlli e leaderboard. Clicca di nuovo per tornare alla vista normale.
-- **🎯 Follow** – attiva la modalità follow: la pista si centra automaticamente sulla vettura selezionata. Il movimento è fluido e graduale. Clicca di nuovo per disattivare.
+- **Follow** – attiva la modalità follow: la pista si centra automaticamente sulla vettura selezionata. Il movimento è fluido e graduale. Clicca di nuovo per disattivare.
 
-### 📺 Picture‑in‑Picture (PiP)
+### Picture‑in‑Picture (PiP)
 
 In modalità espansa, nella barra del tracciato compaiono i pulsanti per attivare widget flottanti per i grafici:
 
-- 📈 **Speed** – andamento della velocità
-- 📉 **G‑Force** – accelerazione longitudinale
-- 🏁 **Gap** – distanza dal leader (grafico a barre)
-- 🎯 **Radar** – profilo della vettura
+- **Speed** – andamento della velocità
+- **G‑Force** – accelerazione longitudinale
+- **Gap** – distanza dal leader (grafico a barre)
+- **Radar** – profilo della vettura
 
 I widget sono **trascinabili** (cliccando sull'intestazione) e **ridimensionabili** trascinando l'angolo inferiore destro. Mostrano il valore corrente (es. velocità in km/h, gap in metri) nell'intestazione. Ogni widget può essere chiuso singolarmente con il pulsante ✕.
 
-### 👻 Ghost Car
+### Ghost Car
 
 - Quando una vettura segna un nuovo **giro record** (best lap assoluto), appare un fantasma (pallino ciano) che segue il giro del leader.
 - Il fantasma **attende al traguardo** se arriva prima dell'auto selezionata, e riparte quando quest'ultima taglia la linea.
 - La ghost car è sincronizzata con il tempo del giro record e si adatta automaticamente quando un nuovo record viene stabilito.
 
-### 📊 Grafici telemetrici
+### Grafici telemetrici
 
 - **Real‑time Speed** – andamento della velocità negli ultimi 50 campioni.
 - **G‑Force Acceleration (AccX)** – accelerazione longitudinale.
 - **Driver & Car Profile** – grafico radar con 5 parametri della vettura selezionata (valori normalizzati).
 - **Gap to Leader** – grafico a barre orizzontali che mostra la distanza (in metri) di ogni vettura dal leader.
 
-### 🧠 Assistente AI (Race Control)
+### Assistente AI (Race Control)
 
 Nella sezione **Race Control**:
 
@@ -206,7 +206,7 @@ Nella sezione **Race Control**:
 - Premi **Send Request** o premi `Invio`.
 - L'AI risponderà utilizzando i dati telemetrici attuali (classifica, velocità, gomme, tempi) fornendo analisi tattiche e suggerimenti.
 
-### 📋 Note rally
+### Note rally
 
 Carica un file JSON contenente note di percorrenza per influenzare il comportamento delle vetture simulate. Il formato atteso è un array di oggetti con:
 
@@ -215,11 +215,11 @@ Carica un file JSON contenente note di percorrenza per influenzare il comportame
 - `danger` (int, opzionale) – livello di pericolosità (1=verde, 2=arancione, 3=rosso)
 - `note` (stringa, opzionale) – descrizione
 
-Le note vengono visualizzate sul tracciato con cerchi colorati e influenzano la velocità target delle vetture simulate. Puoi attivarle/disattivarle con il pulsante **📋 Nascondi/Mostra Note**.
+Le note vengono visualizzate sul tracciato con cerchi colorati e influenzano la velocità target delle vetture simulate. Puoi attivarle/disattivarle con il pulsante **Nascondi/Mostra Note**.
 
 ---
 
-## 📡 API principali (back‑end)
+## API principali (back‑end)
 
 | Endpoint             | Metodo | Descrizione |
 |----------------------|--------|-------------|
@@ -242,7 +242,7 @@ Le note vengono visualizzate sul tracciato con cerchi colorati e influenzano la 
 
 ---
 
-## 🗃️ Persistenza dei dati
+## Persistenza dei dati
 
 - **Tracciato personalizzato** – salvato nel `localStorage` del browser sotto la chiave `f1_custom_track_points`. I punti vengono memorizzati in **coordinate normalizzate** (centrate e scalate) per preservare le proporzioni al caricamento.
 - **Dati di telemetria storica** – se InfluxDB è configurato, vengono salvati nei bucket:
@@ -252,7 +252,7 @@ Le note vengono visualizzate sul tracciato con cerchi colorati e influenzano la 
 
 ---
 
-## ⚡ Personalizzazione e ottimizzazioni
+## Personalizzazione e ottimizzazioni
 
 - **Lunghezza del tracciato** – modificare `TRACK_LENGTH_METERS` in `web_server.py` (default 2000 m).
 - **Scala di base** – `TRACK_SCALE` in `app.js` (default 1000) controlla la dimensione del tracciato normalizzato.
@@ -266,7 +266,7 @@ Le note vengono visualizzate sul tracciato con cerchi colorati e influenzano la 
 
 ---
 
-## 🔌 Dispositivi hardware ESP32
+## Dispositivi hardware ESP32
 
 Il backend è progettato per ricevere dati telemetrici da un ESP32 (o qualsiasi dispositivo) tramite l'endpoint `/api/telemetry`. Il formato atteso è un JSON con:
 
@@ -284,8 +284,6 @@ I pulsanti nella dashboard per **Registra GPS** e **Invia GPS** utilizzano i pro
 
 ---
 
-## 📧 Note finali
+## Note finali
 
 Questo progetto è stato sviluppato per scopi dimostrativi e didattici. Puoi modificarlo e adattarlo liberamente alle tue esigenze. Per qualsiasi problema, controlla i log del server (che ora utilizzano il modulo `logging`) e la console del browser.
-
-**Buona gara!** 🏁
